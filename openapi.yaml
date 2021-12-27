@@ -27,7 +27,7 @@ paths:
       tags:
       - client
       summary: Create client
-      description: This can only be done by the logged in client.
+      description: This can only be done by the logged in user.
       operationId: createClient
       requestBody:
         description: Created client object
@@ -74,7 +74,7 @@ paths:
       tags:
       - client
       summary: Updated client
-      description: This can only be done by the logged in client.
+      description: This can only be done by the logged in user.
       operationId: updateClient
       parameters:
       - name: client-uuid
@@ -133,8 +133,6 @@ components:
         lastName:
           type: string
         email:
-          type: string
-        password:
           type: string
         phone:
           type: string
