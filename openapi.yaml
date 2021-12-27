@@ -16,39 +16,39 @@ servers:
 - url: https://petstore.swagger.io/v2
 - url: http://petstore.swagger.io/v2
 tags:
-- name: client
-  description: Operations about client
+- name: customer
+  description: Operations about customers
   externalDocs:
     description: Find out more about our store
     url: http://swagger.io
 paths:
-  /client:
+  /customer:
     post:
       tags:
-      - client
-      summary: Create client
+      - customer
+      summary: Create customer
       description: This can only be done by the logged in user.
-      operationId: createClient
+      operationId: createCustomer
       requestBody:
-        description: Created client object
+        description: Created customer object
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/Customer'
         required: true
       responses:
         default:
           description: successful operation
           content: {}
       x-codegen-request-body-name: body
-  /client/{client-uuid}:
+  /customer/{customer-uuid}:
     get:
       tags:
-      - client
-      summary: Get client by id
-      operationId: getClientById
+      - customer
+      summary: Get customer by id
+      operationId: getCustomerById
       parameters:
-      - name: client-uuid
+      - name: customer-uuid
         in: path
         description: 'The id that needs to be fetched'
         required: true
@@ -60,52 +60,52 @@ paths:
           content:
             application/xml:
               schema:
-                $ref: '#/components/schemas/Client'
+                $ref: '#/components/schemas/Customer'
             application/json:
               schema:
-                $ref: '#/components/schemas/Client'
+                $ref: '#/components/schemas/Customer'
         400:
           description: Invalid id supplied
           content: {}
         404:
-          description: Client not found
+          description: Customer not found
           content: {}
     put:
       tags:
-      - client
-      summary: Updated client
+      - customer
+      summary: Updated customer
       description: This can only be done by the logged in user.
-      operationId: updateClient
+      operationId: updateCustomer
       parameters:
-      - name: client-uuid
+      - name: customer-uuid
         in: path
         description: name that need to be updated
         required: true
         schema:
           type: string
       requestBody:
-        description: Updated client object
+        description: Updated customer object
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/Customer'
         required: true
       responses:
         400:
-          description: Invalid client supplied
+          description: Invalid customer supplied
           content: {}
         404:
-          description: Client not found
+          description: Customer not found
           content: {}
       x-codegen-request-body-name: body
     delete:
       tags:
-      - client
-      summary: Delete client
-      description: This can only be done by the logged in client.
-      operationId: deleteClient
+      - customer
+      summary: Delete customer
+      description: This can only be done by the logged in customer.
+      operationId: deleteCustomer
       parameters:
-      - name: client-uuid
+      - name: customer-uuid
         in: path
         description: The name that needs to be deleted
         required: true
@@ -116,11 +116,11 @@ paths:
           description: Invalid id supplied
           content: {}
         404:
-          description: Client not found
+          description: Customer not found
           content: {}
 components:
   schemas:
-    Client:
+    Customer:
       type: object
       properties:
         id:
@@ -136,12 +136,12 @@ components:
           type: string
         phone:
           type: string
-        clientStatus:
+        customerStatus:
           type: integer
-          description: Client Status
+          description: Customer Status
           format: int32
       xml:
-        name: Client
+        name: Customer
     Tag:
       type: object
       properties:
