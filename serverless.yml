@@ -1,0 +1,110 @@
+service: customers-service
+app: bizzflow
+frameworkVersion: "2"
+description: BizzFlow Customers Management nanoservice.
+
+custom:
+  environment: ${env:NODE_ENV, 'dev'}
+  application: BizzFlow
+  customDomain:
+    domainName: customers.api.bizzflow.link
+    basePath: ${opt:stage, self:provider.stage}
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+  serverless-offline:
+    httpPort: 3003
+  dynamodb:
+    start:
+      port: 5000
+      inMemory: true
+      migrate: true
+    stages:
+      - ${self:custom.environment}
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage:  ${env:NODE_ENV, 'dev'}
+  region: ${env:REGION, 'eu-central-1'}
+
+  lambdaHashingVersion: 20201221
+  stackName: ${self:service}-${self:custom.environment}-stack
+  apiName: ${self:service}-${self:custom.environment}-api
+
+  memorySize: 128
+  timeout: 20
+
+  environment:
+    NODE_ENV: ${env:NODE_ENV}
+    SYSTEM: ${self:service}-${self:custom.environment}
+    CUSTOMERS_TABLE: customers-${self:custom.environment}
+    # AUTHORISER_ARN: ${self:custom.authorizerId}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+
+  stackTags:
+    service: ${self:service}
+    application: ${self:custom.application}
+  tags:
+    application: ${self:custom.application}
+    service: ${self:service}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CUSTOMERS_TABLE}"
+
+plugins:
+  # - serverless-plugin-typescript
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-domain-manager
+  - serverless-dynamodb-local
+
+package:
+  exclude:
+    - config/.env.stg
+    - config/.env.pro
+  include:
+    - config/.env.${self:custom.environment}
+  patterns:
+    # - "!node_modules/**"
+    - "!vscode/**"
+    - "!bkp/**"
+
+functions:
+  create:
+    handler: src/adapters/controllers/aws-lambda/handler.create
+    description: ${self:custom.application}(${self:service}) > handler for customer creation
+    events:
+      - http:
+          path: customers
+          method: post
+          # authorizer:
+          #   type: TOKEN
+          #   arn: "arn:aws:lambda:eu-central-1:491406350155:function:users-authoriser-dev-authorizer"
+    tags:
+      crudMethodAbbreviation: C
+      crudMethod: CREATION
+
+resources:
+  Resources:
+    CustomersDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: customerId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: customerId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.CUSTOMERS_TABLE}
