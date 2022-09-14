@@ -8,4 +8,5 @@ export default interface Customer {
   };
   active: boolean;
   createdAt: string;
+  userId: string;
 }

@@ -6,7 +6,8 @@ Content-Type: application/json
   firstName: "Firstname",
   lastName: "Lastname",
   email: "fulano@gmail.com",
-  description: "Description"
+  description: "Description",
+  userId: "adac7011-8b75-427e-8a34-07f066f65369"
 }
 */
 
@@ -15,4 +16,5 @@ export interface CreateCustomerEvent {
   lastName: string;
   email: string;
   description?: string;
+  userId: string;
 }

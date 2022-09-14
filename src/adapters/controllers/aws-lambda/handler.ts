@@ -29,6 +29,29 @@ import createDynamoDBClient from '../../repository/aws-dynamodb/dynamodb';
 import { Customer } from '../../../core';
 import { CreateCustomerEvent } from '../models/create-customer-event';
 
+export const create: Handler = middleware(
+  async (
+    event: APIGatewayEvent,
+    _context: Context
+  ): Promise<APIGatewayProxyResult> => {
+    const addCustomerUseCase = new AddCustomerUseCase(
+      new CustomerRepository(
+        createDynamoDBClient(),
+        process.env.CUSTOMERS_TABLE
+      )
+    );
+
+    const createEvent: CreateCustomerEvent = JSON.parse(
+      event.body
+    ) as CreateCustomerEvent;
+
+    const customerResponse = await addCustomerUseCase.execute({
+      customer: mapEventToType(createEvent),
+    });
+    return formatJSONResponse(201, customerResponse);
+  }
+);
+
 export const findOne: Handler = middleware(
   async (
     event: APIGatewayEvent,
@@ -48,25 +71,6 @@ export const findOne: Handler = middleware(
   }
 );
 
-export const create: Handler = middleware(
-  async (
-    event: APIGatewayEvent,
-    _context: Context
-  ): Promise<APIGatewayProxyResult> => {
-    const addCustomerUseCase = new AddCustomerUseCase(
-      new CustomerRepository(
-        createDynamoDBClient(),
-        process.env.CUSTOMERS_TABLE
-      )
-    );
-    const createEvent: CreateCustomerEvent = event.body as CreateCustomerEvent;
-    const customerResponse = await addCustomerUseCase.execute({
-      customer: mapEventToType(createEvent),
-    });
-    return formatJSONResponse(201, customerResponse);
-  }
-);
-
 const mapEventToType = (event: CreateCustomerEvent): Customer => {
   const password = crypto.randomBytes(32).toString('hex');
   const salt = genSaltSync(10);
@@ -79,9 +83,9 @@ const mapEventToType = (event: CreateCustomerEvent): Customer => {
       lastName: event.lastName,
       description: event.description,
       email: event.email,
-      password: password,
     },
     active: true,
     createdAt: new Date().toISOString(),
+    userId: event.userId,
   } as Customer;
 };

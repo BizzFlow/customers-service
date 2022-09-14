@@ -13,19 +13,18 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: https://petstore.swagger.io/v2
-- url: http://petstore.swagger.io/v2
+- url: https://customers.api.bizzflow.link/dev
 tags:
-- name: customer
+- name: customers
   description: Operations about customers
   externalDocs:
     description: Find out more about our store
     url: http://swagger.io
 paths:
-  /customer:
+  /customers:
     post:
       tags:
-      - customer
+      - customers
       summary: Create customer
       description: This can only be done by the logged in user.
       operationId: createCustomer
@@ -41,10 +40,10 @@ paths:
           description: successful operation
           content: {}
       x-codegen-request-body-name: body
-  /customer/{customer-uuid}:
+  /customers/{customer-uuid}:
     get:
       tags:
-      - customer
+      - customers
       summary: Get customer by id
       operationId: getCustomerById
       parameters:
@@ -72,7 +71,7 @@ paths:
           content: {}
     put:
       tags:
-      - customer
+      - customers
       summary: Updated customer
       description: This can only be done by the logged in user.
       operationId: updateCustomer
@@ -100,7 +99,7 @@ paths:
       x-codegen-request-body-name: body
     delete:
       tags:
-      - customer
+      - customers
       summary: Delete customer
       description: This can only be done by the logged in customer.
       operationId: deleteCustomer
@@ -140,6 +139,9 @@ components:
           type: integer
           description: Customer Status
           format: int32
+        user-id:
+          type: integer
+          format: int64
       xml:
         name: Customer
     Tag:
@@ -162,16 +164,3 @@ components:
           type: string
         message:
           type: string
-  securitySchemes:
-    petstore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: http://petstore.swagger.io/oauth/dialog
-          scopes:
-            write:pets: modify pets in your account
-            read:pets: read your pets
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
