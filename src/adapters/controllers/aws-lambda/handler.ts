@@ -29,6 +29,25 @@ import createDynamoDBClient from '../../repository/aws-dynamodb/dynamodb';
 import { Customer } from '../../../core';
 import { CreateCustomerEvent } from '../models/create-customer-event';
 
+export const findOne: Handler = middleware(
+  async (
+    event: APIGatewayEvent,
+    _context: Context
+  ): Promise<APIGatewayProxyResult> => {
+    // const findCustomerUseCase = new AddCustomerUseCase(
+    //   new CustomerRepository(
+    //     createDynamoDBClient(),
+    //     process.env.CUSTOMERS_TABLE
+    //   )
+    // );
+    const customerResponse = {
+      id: 'id-customer',
+      name: 'name-customer',
+    };
+    return formatJSONResponse(201, customerResponse);
+  }
+);
+
 export const create: Handler = middleware(
   async (
     event: APIGatewayEvent,
