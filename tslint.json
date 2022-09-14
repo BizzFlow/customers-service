@@ -1,16 +1,7 @@
-    {
-      "extends": [
-        "tslint-config-airbnb"
-      ],
-      "indent": [
-        true,
-        "tabs",
-        2
-      ],
-      "linterOptions": {
-        "exclude": [
-          "tests/*users.mock.ts",
-          "temp/**/*.ts"
-        ]
-      }
-    }
+{
+  "extends": ["tslint-config-airbnb"],
+  "indent": [true, "tabs", 2],
+  "linterOptions": {
+    "exclude": ["tests/*customers.mock.ts", "temp/**/*.ts"]
+  }
+}

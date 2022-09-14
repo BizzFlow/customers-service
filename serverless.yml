@@ -1,7 +1,7 @@
 service: customers-service
 app: bizzflow
-frameworkVersion: "2"
-description: BizzFlow Customers Management nanoservice.
+frameworkVersion: "3"
+# description: BizzFlow Customers Management nanoservice.
 
 custom:
   environment: ${env:NODE_ENV, 'dev'}
@@ -27,7 +27,6 @@ provider:
   stage:  ${env:NODE_ENV, 'dev'}
   region: ${env:REGION, 'eu-central-1'}
 
-  lambdaHashingVersion: 20201221
   stackName: ${self:service}-${self:custom.environment}-stack
   apiName: ${self:service}-${self:custom.environment}-api
 
@@ -79,6 +78,19 @@ package:
     - "!bkp/**"
 
 functions:
+  get:
+    handler: src/adapters/controllers/aws-lambda/handler.findOne
+    description: ${self:custom.application}(${self:service}) > handler for customer retrieval
+    events:
+      - http:
+          path: customers/{id}
+          method: get
+          # authorizer:
+          #   type: TOKEN
+          #   arn: "arn:aws:lambda:eu-central-1:491406350155:function:users-authoriser-dev-authorizer"
+    tags:
+      crudMethodAbbreviation: R
+      crudMethod: RETRIEVE
   create:
     handler: src/adapters/controllers/aws-lambda/handler.create
     description: ${self:custom.application}(${self:service}) > handler for customer creation
