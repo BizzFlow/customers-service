@@ -183,6 +183,10 @@ export const createContextMock = {
   invokedFunctionArn:
     'arn:aws:lambda:eu-central-1:491406350155:function:customers-service-dev-create',
   awsRequestId: '1de13371-785a-4e82-b527-bcf20ad91603',
+  getRemainingTimeInMillis: null,
+  done: null,
+  fail: null,
+  succeed: null,
 };
 
 export const findOneEventMock = {

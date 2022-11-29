@@ -34,20 +34,24 @@ export const create: Handler = middleware(
     event: APIGatewayEvent,
     _context: Context
   ): Promise<APIGatewayProxyResult> => {
-    const addCustomerUseCase = new AddCustomerUseCase(
-      new CustomerRepository(
-        createDynamoDBClient(),
-        process.env.CUSTOMERS_TABLE
-      )
-    );
+    // const addCustomerUseCase = new AddCustomerUseCase(
+    //   new CustomerRepository(
+    //     createDynamoDBClient(),
+    //     process.env.CUSTOMERS_TABLE
+    //   )
+    // );
 
-    const createEvent: CreateCustomerEvent = JSON.parse(
-      event.body
-    ) as CreateCustomerEvent;
+    // const createEvent: CreateCustomerEvent = JSON.parse(
+    //   event.body
+    // ) as CreateCustomerEvent;
 
-    const customerResponse = await addCustomerUseCase.execute({
-      customer: mapEventToType(createEvent),
-    });
+    // const customerResponse = await addCustomerUseCase.execute({
+    //   customer: mapEventToType(createEvent),
+    // });
+    const customerResponse = {
+      id: '123',
+      name: 'Name',
+    };
     return formatJSONResponse(201, customerResponse);
   }
 );
